@@ -1,0 +1,81 @@
+<%- include("../partials/header") %>
+<div class="container addPadding">
+    <div class="row">
+        <div id="ingredients" style="position:fixed;height:100%;overflow-y:auto;padding-top:5em" class="col-md-3 sticky-top">
+            <div class="container">
+                <p class = "lead">Ingredients</p>
+                <ul class="list-group list-group-flush">
+                    <% recipe.ingredients.forEach(function(ingredient) { %>
+                        <li class="list-group-item"><%= ingredient %></li>
+                    <% }) %>
+                </ul>
+            </div>
+        </div>
+        <script>
+            $(window).resize(function(){
+                console.log($(window).width());
+                if($(window).width() <= 767){
+                    $('#ingredients').removeClass('sticky-top');
+                }
+            });
+        </script>
+        <div class="col-md-9 offset-md-3">
+            <div class="card mb-4 box-shadow">
+            <img class = "card-img-top img-responsive" src="<%= recipe.image %>" alt="recipe">
+            <div class="card-body">
+            <h5 class="card-title"><%= recipe.name %></h5>
+                <div class="pull-right"><em>Time Consumed: <%= recipe.time%></em></div>
+                <p>Posted by: <%= recipe.author.username %></p>
+                <p class="card-text"><%= recipe.description %></p>
+                <p class="card-text"><%= recipe.directions %></p>
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                    <% if (currentUser && recipe.author.id.equals(currentUser.id)) {%>
+                        <a class="btn btn-md btn-outline-secondary" href="/recipes/<%=recipe._id%>/edit">Edit</a>
+                        <form action="/recipes/<%=recipe._id%>?_method=DELETE" method = "POST">
+                            <button class="btn btn-md btn-outline-secondary deleteBtn">Delete</button>
+                        </form>
+                    <% } %>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="album py-5 bg-light">
+                <div class="container">
+                <div class="text-right">
+                    <form action="/recipes/<%= recipe._id %>/comments" method = "POST">
+                        <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Your Comment</span>
+                          </div>
+                        <textarea class="form-control" aria-label="With textarea" type="text" name = "comment[text]", placeholder = "Share your ideas about this recipe with others!"></textarea>
+                        </div>
+                        <button style ="margin-top: 1em" class ="btn btn-success">Post</button>
+                    </form>
+                </div>
+                <hr>
+                <% recipe.comments.forEach(function(comment) { %>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <strong><%= comment.author.username %></strong>
+                            <span class="pull-right"><%= moment(comment.dateCreated).fromNow() %></span>
+                            <p><%= comment.text %></p>
+                            <% if (currentUser && comment.author.id.equals(currentUser.id)) {%>
+                                <div class="btn-group">
+                                    <a class = "btn btn-sm btn-outline-secondary" href="/recipes/<%=recipe._id%>/comments/<%=comment._id%>/edit">Edit</a>
+                                    <form action="/recipes/<%=recipe._id%>/comments/<%=comment._id%>?_method=DELETE" method = "POST">
+                                        <button type = "submit" class="btn btn-sm btn-outline-secondary deleteBtn">Delete</button>
+                                    </form>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include ("../partials/footer") %>

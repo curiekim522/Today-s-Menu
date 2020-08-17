@@ -1,0 +1,34 @@
+<%- include("../partials/header") %>
+
+    <section class="jumbotron text-center">
+        <div class="container">
+          <h1>Welcome to <strong>Today's Menu</strong></h1>
+          <p class="lead text-muted">Not sure what to eat today? Browse through the hand-written recipes to find your today's menu and help others by commenting on other's recipe and adding your own recipe!</p>
+          <p>
+            <a class = "btn btn-primary btn-large" id = "addBtn" href="/recipes/new">Post Your Recipe</a>
+          </p>
+        </div>
+    </section>
+        
+    <div >
+        <h3 class="text-center">Select Your Menu for Today!</h3>
+        <div class="container bottomPadding">
+          <div class="row">
+            <% recipes.forEach(function(recipe) { %>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card mb-2 shadow-sm">
+                        <img class="bd-placeholder-img card-img-top" width="100%" height="200" src="<%= recipe.image %>" alt="<%= recipe.name %>">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= recipe.name %></h5>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="/recipes/<%= recipe._id %>" class = "btn btn-sm btn-outline-secondary">More</a>
+                                <small class="text-muted"><%= moment(recipe.dateCreated).fromNow() %></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+</div>
+<%- include("../partials/footer") %>
